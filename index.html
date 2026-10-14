@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="referrer" content="no-referrer" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#f4f1e8" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#14171c" media="(prefers-color-scheme: dark)" />
+    <meta
+      name="description"
+      content="Snake with a pathfinding autopilot: greedy A*, safe A* and a Hamiltonian cycle with shortcuts that always fills the board."
+    />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <title>Snake Autopilot</title>
+  </head>
+  <body>
+    <main class="app" id="app" data-phase="title">
+      <section class="game" aria-labelledby="title">
+        <header class="hud">
+          <h1 id="title">Snake <span class="muted">Autopilot</span></h1>
+          <dl class="scores">
+            <div>
+              <dt>Score</dt>
+              <dd id="score">0</dd>
+            </div>
+            <div>
+              <dt>Best</dt>
+              <dd id="best">0</dd>
+            </div>
+          </dl>
+          <div class="hud-buttons">
+            <button
+              type="button"
+              class="icon-btn"
+              id="pause-btn"
+              aria-label="Pause"
+              title="Pause (P)"
+            >
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M7 5h3v14H7zM14 5h3v14h-3z" />
+              </svg>
+            </button>
+            <button
+              type="button"
+              class="icon-btn"
+              id="mute-btn"
+              aria-label="Sound"
+              aria-pressed="true"
+              title="Sound (M)"
+            >
+              <svg viewBox="0 0 24 24" aria-hidden="true" class="on">
+                <path d="M4 9h4l5-4v14l-5-4H4zM16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12" />
+              </svg>
+              <svg viewBox="0 0 24 24" aria-hidden="true" class="off">
+                <path d="M4 9h4l5-4v14l-5-4H4zM16 9l5 6M21 9l-5 6" />
+              </svg>
+            </button>
+            <button
+              type="button"
+              class="icon-btn"
+              id="theme-btn"
+              aria-label="Theme: system"
+              title="Theme"
+            >
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 3a9 9 0 1 0 0 18zM12 3a9 9 0 0 1 0 18" />
+              </svg>
+            </button>
+          </div>
+        </header>
+
+        <div class="stage" id="stage">
+          <canvas id="board" tabindex="0" role="img" aria-label="Snake board"></canvas>
+          <div class="overlay" id="overlay">
+            <div class="card">
+              <h2 id="overlay-title">Snake</h2>
+              <p id="overlay-text">Eat the apples, avoid the walls and your own tail.</p>
+              <button type="button" class="primary" id="start-btn">Start</button>
+              <p class="hint" id="overlay-hint">
+                Press <kbd>Space</kbd> or <kbd>Enter</kbd>, or tap the board.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="dpad" id="dpad" aria-label="Direction pad" role="group">
+          <button type="button" data-dir="up" aria-label="Up">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 6l7 9H5z" /></svg>
+          </button>
+          <button type="button" data-dir="left" aria-label="Left">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 12l9-7v14z" /></svg>
+          </button>
+          <button type="button" data-dir="right" aria-label="Right">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 12l-9 7V5z" /></svg>
+          </button>
+          <button type="button" data-dir="down" aria-label="Down">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 18l-7-9h14z" /></svg>
+          </button>
+        </div>
+      </section>
+
+      <aside class="panel" aria-labelledby="settings-title">
+        <h2 id="settings-title">Settings</h2>
+        <form id="settings" class="settings">
+          <fieldset>
+            <legend>Autopilot</legend>
+            <label class="switch">
+              <input type="checkbox" id="autopilot" name="autopilot" />
+              <span>Watch the AI play <kbd>I</kbd></span>
+            </label>
+            <label for="strategy">Strategy</label>
+            <select id="strategy" name="strategy"></select>
+            <p class="note" id="strategy-note"></p>
+            <label class="switch">
+              <input type="checkbox" id="show-path" name="showPath" />
+              <span>Show planned path</span>
+            </label>
+          </fieldset>
+          <fieldset>
+            <legend>Game</legend>
+            <label for="mode">Edges</label>
+            <select id="mode" name="mode">
+              <option value="walls">Walls</option>
+              <option value="wrap">Wrap around</option>
+            </select>
+            <label for="size">Board</label>
+            <select id="size" name="size">
+              <option value="10">10 x 10</option>
+              <option value="16">16 x 16</option>
+              <option value="20">20 x 20</option>
+            </select>
+            <label for="speed">Speed <output id="speed-out" for="speed"></output></label>
+            <input type="range" id="speed" name="speed" min="0" max="4" step="1" />
+            <label class="switch">
+              <input type="checkbox" id="dpad-toggle" name="dpad" />
+              <span>On-screen arrows</span>
+            </label>
+            <p class="note" id="restart-note" hidden>
+              Edges and board size apply to the next game.
+            </p>
+          </fieldset>
+        </form>
+        <details class="help">
+          <summary>Controls</summary>
+          <ul>
+            <li><kbd>Arrows</kbd> or <kbd>WASD</kbd> steer</li>
+            <li><kbd>Space</kbd> / <kbd>Enter</kbd> start or resume</li>
+            <li><kbd>P</kbd> / <kbd>Esc</kbd> pause</li>
+            <li><kbd>M</kbd> sound, <kbd>I</kbd> autopilot</li>
+            <li>Swipe on the board, or use the on-screen arrows</li>
+          </ul>
+        </details>
+      </aside>
+
+      <div class="sr-only" id="live" aria-live="polite" aria-atomic="true"></div>
+      <div class="sr-only" id="alert" aria-live="assertive" aria-atomic="true"></div>
+    </main>
+    <noscript><p class="noscript">This game needs JavaScript.</p></noscript>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
