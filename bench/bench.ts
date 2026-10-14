@@ -62,7 +62,7 @@ if (values.sweep) {
     for (let i = 0; i < games; i++) {
       const r = runGame(strategy, config, firstSeed + i);
       if (r.outcome === 'won') wins++;
-      moves += r.moves;
+      moves += r.movesToLastApple;
       apples += r.score;
     }
     console.log(
@@ -80,12 +80,14 @@ for (const id of ids) {
   let deaths = 0;
   let stalls = 0;
   let totalMoves = 0;
+  let allMoves = 0;
   let totalApples = 0;
   const t0 = performance.now();
   for (let i = 0; i < games; i++) {
     const r = runGame(strategy, config, firstSeed + i);
     scores.push(r.score);
-    totalMoves += r.moves;
+    totalMoves += r.movesToLastApple;
+    allMoves += r.moves;
     totalApples += r.score;
     if (r.outcome === 'won') wins++;
     else if (r.outcome === 'dead') deaths++;
@@ -101,11 +103,14 @@ for (const id of ids) {
     deaths,
     stalls,
     movesPerApple: totalApples === 0 ? 0 : totalMoves / totalApples,
-    usPerMove: (elapsed * 1000) / Math.max(1, totalMoves),
+    usPerMove: (elapsed * 1000) / Math.max(1, allMoves),
   });
   process.stderr.write(`${id}: done in ${(elapsed / 1000).toFixed(1)}s\n`);
 }
 
+console.log(
+  `\nMoves per apple counts moves up to the last apple eaten. Time per move includes the strategy's decision and the engine step.`,
+);
 console.log(
   `\n${games} seeded games per strategy (seeds ${firstSeed}..${firstSeed + games - 1}), ${size}x${size} board, ${mode} mode, max score ${maxScore}. Node ${process.version}.\n`,
 );

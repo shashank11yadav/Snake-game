@@ -8,6 +8,8 @@ export interface RunResult {
   readonly outcome: Outcome;
   readonly score: number;
   readonly moves: number;
+  /** Moves made up to and including the last apple, so a stall loop at the end is not counted. */
+  readonly movesToLastApple: number;
   readonly finalLength: number;
   readonly state: GameState;
 }
@@ -26,16 +28,23 @@ export function runGame(
 ): RunResult {
   let state = createGame(config, seed);
   let sinceApple = 0;
+  let movesToLastApple = 0;
   while (state.status === 'playing' && sinceApple < stallLimit) {
     const before = state.score;
     state = step(state, strategy.decide(state).dir);
-    sinceApple = state.score > before ? 0 : sinceApple + 1;
+    if (state.score > before) {
+      sinceApple = 0;
+      movesToLastApple = state.ticks;
+    } else {
+      sinceApple++;
+    }
   }
   const outcome: Outcome = state.status === 'playing' ? 'stalled' : state.status;
   return {
     outcome,
     score: state.score,
     moves: state.ticks,
+    movesToLastApple,
     finalLength: state.snake.length,
     state,
   };
