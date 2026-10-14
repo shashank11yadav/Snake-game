@@ -1,0 +1,39 @@
+{
+  "name": "snake-autopilot",
+  "version": "2.0.0",
+  "private": true,
+  "description": "Snake in TypeScript with a pathfinding autopilot (A*, safe A*, Hamiltonian cycle with shortcuts) and a headless benchmark.",
+  "license": "MIT",
+  "author": "Shashank Yadav",
+  "type": "module",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "vite --port 5500 --strictPort",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview --port 5501 --strictPort",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:e2e": "playwright test",
+    "bench": "tsx bench/bench.ts",
+    "capture": "tsx scripts/capture-demo.ts"
+  },
+  "devDependencies": {
+    "@eslint/js": "10.0.1",
+    "@playwright/test": "1.64.1",
+    "@types/node": "24.19.2",
+    "eslint": "10.12.0",
+    "globals": "17.13.0",
+    "prettier": "3.9.10",
+    "tsx": "4.23.15",
+    "typescript": "6.0.3",
+    "typescript-eslint": "8.71.2",
+    "vite": "8.3.4",
+    "vitest": "5.0.4"
+  }
+}
