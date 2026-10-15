@@ -129,4 +129,7 @@ test('has no detectable accessibility violations', async ({ page }) => {
   await expect(page.locator('#app')).toHaveAttribute('data-phase', 'paused');
   const paused = await new AxeBuilder({ page }).analyze();
   expect(paused.violations).toEqual([]);
+  await page.emulateMedia({ colorScheme: 'dark' });
+  const dark = await new AxeBuilder({ page }).analyze();
+  expect(dark.violations).toEqual([]);
 });
