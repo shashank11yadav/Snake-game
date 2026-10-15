@@ -90,9 +90,8 @@ export function bodyFollowsCycle(cycle: Cycle, snake: readonly number[]): boolea
  * skipped cells behind the head that cannot be used again until the tail
  * passes them; while the snake is long those holes make the apple land
  * "behind" the head more often and cost a full lap. A sweep with
- * `npm run bench -- --sweep` put the best value at about one half. John
- * Tapsell's write-up of this approach also stops cutting once the snake is
- * large.
+ * `npm run bench -- --sweep` put the best value at one half, which is also
+ * the rule in John Tapsell's write-up of this approach.
  */
 export const DEFAULT_SHORTCUT_CUTOFF = 0.5;
 
