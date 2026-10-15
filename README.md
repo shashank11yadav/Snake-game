@@ -6,7 +6,7 @@ Hamiltonian cycle with shortcuts.
 
 ![The Hamiltonian autopilot filling a 10x10 board](docs/autopilot.gif)
 
-**Live demo:** https://shashank11yadav.github.io/Snake-game/ (live once GitHub Pages is enabled for the repo)
+**Live demo:** https://shashank11yadav.github.io/Snake-game/
 
 ## Controls
 
