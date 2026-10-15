@@ -5,6 +5,14 @@
   "description": "Snake in TypeScript with a pathfinding autopilot (A*, safe A*, Hamiltonian cycle with shortcuts) and a headless benchmark.",
   "license": "MIT",
   "author": "Shashank Yadav",
+  "homepage": "https://shashank11yadav.github.io/Snake-game/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shashank11yadav/Snake-game.git"
+  },
+  "bugs": {
+    "url": "https://github.com/shashank11yadav/Snake-game/issues"
+  },
   "type": "module",
   "engines": {
     "node": ">=22.12.0"
