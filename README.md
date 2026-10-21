@@ -8,6 +8,8 @@ Hamiltonian cycle with shortcuts.
 
 **Live demo:** https://shashank11yadav.github.io/Snake-game/
 
+More of my projects: [shashankyadav.dev](https://www.shashankyadav.dev/#work)
+
 ## Controls
 
 | Action           | Keyboard                | Touch                              |

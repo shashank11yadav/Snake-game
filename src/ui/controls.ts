@@ -8,12 +8,13 @@ export interface ControlHandlers {
   onTap(): void;
 }
 
-/** Elements that need arrow keys, Space and Enter for themselves. */
+/** Elements that need arrow keys, Space and Enter for themselves. Links keep Enter. */
 function ownsKeys(target: EventTarget | null): 'all' | 'activate' | null {
   if (!(target instanceof HTMLElement)) return null;
   if (target instanceof HTMLSelectElement || target instanceof HTMLInputElement) return 'all';
   if (
     target instanceof HTMLButtonElement ||
+    target instanceof HTMLAnchorElement ||
     (target instanceof HTMLElement && target.tagName === 'SUMMARY')
   ) {
     return 'activate';

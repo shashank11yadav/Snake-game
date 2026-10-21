@@ -402,6 +402,14 @@ input[type='range'] {
   margin: 0;
 }
 
+.credit {
+  margin-top: 14px;
+}
+
+.credit a {
+  color: inherit;
+}
+
 .help summary {
   cursor: pointer;
   font-weight: 600;
